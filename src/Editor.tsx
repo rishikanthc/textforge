@@ -2,6 +2,7 @@ import React, { useEffect, useImperativeHandle, forwardRef } from 'react'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Highlight from '@tiptap/extension-highlight'
+import { Callout } from './extensions/Callout'
 
 interface EditorProps {
   content?: string
@@ -30,7 +31,8 @@ const Editor = forwardRef<EditorRef, EditorProps>(({
       StarterKit,
       Highlight.configure({
         multicolor: true
-      })
+      }),
+      Callout
     ],
     content,
     editable,
