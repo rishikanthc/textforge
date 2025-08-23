@@ -49,6 +49,24 @@ function App() {
     }
   }
 
+  const handleInsertCodeBlock = () => {
+    const editor = editorRef.current?.editor  
+    if (editor) {
+      editor.commands.insertContent({
+        type: 'codeBlock',
+        attrs: {
+          language: 'javascript'
+        },
+        content: [
+          {
+            type: 'text',
+            text: 'function fibonacci(n) {\n  if (n <= 1) return n;\n  return fibonacci(n - 1) + fibonacci(n - 2);\n}\n\nconsole.log(fibonacci(10));'
+          }
+        ]
+      })
+    }
+  }
+
   return (
     <div className="app">
       <header className="app-header">
@@ -63,6 +81,7 @@ function App() {
         <button onClick={handleInsertInlineMath}>Insert Inline Math</button>
         <button onClick={handleInsertBlockMath}>Insert Block Math</button>
         <button onClick={handleInsertAlignTest}>Test Align</button>
+        <button onClick={handleInsertCodeBlock}>Insert Code Block</button>
       </div>
 
       <div className="editor-container">

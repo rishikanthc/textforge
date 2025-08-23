@@ -2,6 +2,41 @@ import React, { useEffect, useImperativeHandle, forwardRef, useState } from 'rea
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Highlight from '@tiptap/extension-highlight'
+import { CodeBlockLowlight } from '@tiptap/extension-code-block-lowlight'
+// Import common programming languages
+import css from 'highlight.js/lib/languages/css'
+import js from 'highlight.js/lib/languages/javascript'
+import ts from 'highlight.js/lib/languages/typescript'
+import python from 'highlight.js/lib/languages/python'
+import java from 'highlight.js/lib/languages/java'
+import html from 'highlight.js/lib/languages/xml'
+import json from 'highlight.js/lib/languages/json'
+import bash from 'highlight.js/lib/languages/bash'
+import sql from 'highlight.js/lib/languages/sql'
+import markdown from 'highlight.js/lib/languages/markdown'
+// load common languages with "common"
+import { common, createLowlight } from 'lowlight'
+
+// create a lowlight instance with common languages loaded
+const lowlight = createLowlight(common)
+
+// Register additional specific languages
+lowlight.register('html', html)
+lowlight.register('css', css)
+lowlight.register('js', js)
+lowlight.register('javascript', js)
+lowlight.register('ts', ts)
+lowlight.register('typescript', ts)
+lowlight.register('python', python)
+lowlight.register('py', python)
+lowlight.register('java', java)
+lowlight.register('json', json)
+lowlight.register('bash', bash)
+lowlight.register('shell', bash)
+lowlight.register('sh', bash)
+lowlight.register('sql', sql)
+lowlight.register('markdown', markdown)
+lowlight.register('md', markdown)
 import { Mathematics } from '@tiptap/extension-mathematics'
 import { Callout } from './extensions/Callout'
 import { MathInputRules } from './extensions/MathInputRules'
@@ -44,7 +79,13 @@ const Editor = forwardRef<EditorRef, EditorProps>(({
 
   const editor = useEditor({
     extensions: [
-      StarterKit,
+      StarterKit.configure({
+        codeBlock: false, // Disable default code block to use CodeBlockLowlight
+      }),
+      CodeBlockLowlight.configure({
+        lowlight,
+        defaultLanguage: 'plaintext',
+      }),
       Highlight.configure({
         multicolor: true
       }),

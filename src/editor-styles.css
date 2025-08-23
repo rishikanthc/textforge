@@ -515,3 +515,110 @@ div.quill-editor div.quill-editor-content div.ProseMirror i {
   background: #1d4ed8;
 }
 
+/* Code Block Syntax Highlighting - Light Theme */
+.quill-editor .ProseMirror pre {
+  background: #f8f9fa;
+  color: #495057;
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+
+.quill-editor .ProseMirror pre code {
+  background: none;
+  color: inherit;
+  padding: 0;
+  font-size: inherit;
+}
+
+/* Syntax highlighting colors - Light theme */
+.quill-editor .hljs {
+  background: #f8f9fa;
+  color: #495057;
+}
+
+.quill-editor .hljs-comment,
+.quill-editor .hljs-quote {
+  color: #6c757d;
+  font-style: italic;
+}
+
+.quill-editor .hljs-keyword,
+.quill-editor .hljs-selector-tag,
+.quill-editor .hljs-subst {
+  color: #d73a49;
+  font-weight: 600;
+}
+
+.quill-editor .hljs-number,
+.quill-editor .hljs-literal,
+.quill-editor .hljs-variable,
+.quill-editor .hljs-template-variable {
+  color: #005cc5;
+}
+
+.quill-editor .hljs-string,
+.quill-editor .hljs-doctag {
+  color: #032f62;
+}
+
+.quill-editor .hljs-title,
+.quill-editor .hljs-section,
+.quill-editor .hljs-selector-id {
+  color: #6f42c1;
+  font-weight: 600;
+}
+
+.quill-editor .hljs-type,
+.quill-editor .hljs-class .hljs-title {
+  color: #d73a49;
+  font-weight: 600;
+}
+
+.quill-editor .hljs-tag,
+.quill-editor .hljs-name,
+.quill-editor .hljs-attribute {
+  color: #22863a;
+  font-weight: 600;
+}
+
+.quill-editor .hljs-regexp,
+.quill-editor .hljs-link {
+  color: #032f62;
+}
+
+.quill-editor .hljs-symbol,
+.quill-editor .hljs-bullet {
+  color: #e36209;
+}
+
+.quill-editor .hljs-built_in,
+.quill-editor .hljs-builtin-name {
+  color: #005cc5;
+}
+
+.quill-editor .hljs-meta {
+  color: #6c757d;
+}
+
+.quill-editor .hljs-deletion {
+  background: #ffeef0;
+}
+
+.quill-editor .hljs-addition {
+  background: #f0fff4;
+}
+
+.quill-editor .hljs-emphasis {
+  font-style: italic;
+}
+
+.quill-editor .hljs-strong {
+  font-weight: 600;
+}
+
