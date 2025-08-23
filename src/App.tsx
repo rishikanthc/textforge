@@ -33,7 +33,19 @@ function App() {
   const handleInsertBlockMath = () => {
     const editor = editorRef.current?.editor  
     if (editor) {
-      editor.commands.insertBlockMath({ latex: '\\sum_{i=1}^{n} i = \\frac{n(n+1)}{2}' })
+      // Test with a simple equation first
+      editor.commands.insertBlockMath({ 
+        latex: 'x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}' 
+      })
+    }
+  }
+
+  const handleInsertAlignTest = () => {
+    const editor = editorRef.current?.editor  
+    if (editor) {
+      editor.commands.insertBlockMath({ 
+        latex: '\\begin{aligned}\na &= b + c\\\\\nd &= e - f\n\\end{aligned}' 
+      })
     }
   }
 
@@ -50,6 +62,7 @@ function App() {
         <button onClick={() => editorRef.current?.focus()}>Focus Editor</button>
         <button onClick={handleInsertInlineMath}>Insert Inline Math</button>
         <button onClick={handleInsertBlockMath}>Insert Block Math</button>
+        <button onClick={handleInsertAlignTest}>Test Align</button>
       </div>
 
       <div className="editor-container">

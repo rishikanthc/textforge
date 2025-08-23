@@ -347,3 +347,171 @@ div.quill-editor div.quill-editor-content div.ProseMirror i {
   border-radius: 0.25rem;
 }
 
+/* Math Edit Dialog Styles */
+.math-dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.math-dialog {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow: hidden;
+  animation: mathDialogSlideIn 0.2s ease-out;
+}
+
+@keyframes mathDialogSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.math-dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.math-dialog-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 16px;
+  color: #1f2937;
+}
+
+.math-dialog-close {
+  background: none;
+  border: none;
+  padding: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #6b7280;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.math-dialog-close:hover {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.math-dialog-content {
+  padding: 20px 24px;
+}
+
+.math-dialog-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 8px;
+}
+
+.math-dialog-input,
+.math-dialog-textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  background: #fafafa;
+  color: #1f2937;
+  transition: all 0.15s ease;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.math-dialog-input:focus,
+.math-dialog-textarea:focus {
+  border-color: #3b82f6;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.math-dialog-textarea {
+  resize: vertical;
+  min-height: 120px;
+  line-height: 1.5;
+}
+
+.math-dialog-hint {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #6b7280;
+  font-style: italic;
+}
+
+.math-dialog-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 24px 20px;
+  border-top: 1px solid #e5e7eb;
+  background: #fafafa;
+}
+
+.math-dialog-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border: 1px solid transparent;
+  outline: none;
+}
+
+.math-dialog-button--cancel {
+  background: white;
+  color: #6b7280;
+  border-color: #d1d5db;
+}
+
+.math-dialog-button--cancel:hover {
+  background: #f9fafb;
+  color: #374151;
+  border-color: #9ca3af;
+}
+
+.math-dialog-button--save {
+  background: #3b82f6;
+  color: white;
+}
+
+.math-dialog-button--save:hover {
+  background: #2563eb;
+}
+
+.math-dialog-button--save:active {
+  background: #1d4ed8;
+}
+

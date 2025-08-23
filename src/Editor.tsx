@@ -1,10 +1,11 @@
-import React, { useEffect, useImperativeHandle, forwardRef } from 'react'
+import React, { useEffect, useImperativeHandle, forwardRef, useState } from 'react'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Highlight from '@tiptap/extension-highlight'
 import { Mathematics } from '@tiptap/extension-mathematics'
 import { Callout } from './extensions/Callout'
 import { MathInputRules } from './extensions/MathInputRules'
+import { MathEditDialog } from './components/MathEditDialog'
 import 'katex/dist/katex.min.css'
 
 interface EditorProps {
@@ -30,6 +31,17 @@ const Editor = forwardRef<EditorRef, EditorProps>(({
   placeholder = 'Start writing...',
   editable = true
 }, ref) => {
+  const [mathDialog, setMathDialog] = useState<{
+    isOpen: boolean
+    latex: string
+    isBlockMath: boolean
+    position?: number
+  }>({
+    isOpen: false,
+    latex: '',
+    isBlockMath: false,
+  })
+
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -39,26 +51,35 @@ const Editor = forwardRef<EditorRef, EditorProps>(({
       Mathematics.configure({
         inlineOptions: {
           onClick: (node, pos) => {
-            const katex = prompt('Enter LaTeX calculation:', node.attrs.latex)
-            if (katex) {
-              editor?.chain().setNodeSelection(pos).updateInlineMath({ latex: katex }).focus().run()
-            }
+            setMathDialog({
+              isOpen: true,
+              latex: node.attrs.latex || '',
+              isBlockMath: false,
+              position: pos,
+            })
           }
         },
         blockOptions: {
           onClick: (node, pos) => {
-            const katex = prompt('Enter LaTeX calculation:', node.attrs.latex)
-            if (katex) {
-              editor?.chain().setNodeSelection(pos).updateBlockMath({ latex: katex }).focus().run()
-            }
+            setMathDialog({
+              isOpen: true,
+              latex: node.attrs.latex || '',
+              isBlockMath: true,
+              position: pos,
+            })
           }
         },
         katexOptions: {
           throwOnError: false,
+          strict: false,
           macros: {
             '\\R': '\\mathbb{R}',
-            '\\N': '\\mathbb{N}'
-          }
+            '\\N': '\\mathbb{N}',
+            '\\Z': '\\mathbb{Z}',
+            '\\Q': '\\mathbb{Q}',
+            '\\C': '\\mathbb{C}'
+          },
+          trust: (context) => ['\\htmlId', '\\href', '\\class', '\\style', '\\data'].includes(context.command)
         }
       }),
       MathInputRules,
@@ -92,6 +113,32 @@ const Editor = forwardRef<EditorRef, EditorProps>(({
     editor: editor
   }), [editor])
 
+  const handleMathDialogSave = (latex: string) => {
+    if (!editor || mathDialog.position === undefined) return
+
+    if (mathDialog.isBlockMath) {
+      editor.chain()
+        .setNodeSelection(mathDialog.position)
+        .updateBlockMath({ latex })
+        .focus()
+        .run()
+    } else {
+      editor.chain()
+        .setNodeSelection(mathDialog.position)
+        .updateInlineMath({ latex })
+        .focus()
+        .run()
+    }
+  }
+
+  const handleMathDialogClose = () => {
+    setMathDialog({
+      isOpen: false,
+      latex: '',
+      isBlockMath: false,
+    })
+  }
+
   if (!editor) {
     return null
   }
@@ -101,6 +148,14 @@ const Editor = forwardRef<EditorRef, EditorProps>(({
       <EditorContent 
         editor={editor}
         className="quill-editor-content"
+      />
+      
+      <MathEditDialog
+        isOpen={mathDialog.isOpen}
+        onClose={handleMathDialogClose}
+        onSave={handleMathDialogSave}
+        initialLatex={mathDialog.latex}
+        isBlockMath={mathDialog.isBlockMath}
       />
     </div>
   )
