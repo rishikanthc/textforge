@@ -21,6 +21,22 @@ function App() {
     editorRef.current?.setContent('<h1>New Content</h1><p>This content was set programmatically!</p>')
   }
 
+  const handleInsertInlineMath = () => {
+    // Test if we can manually insert math
+    const editor = editorRef.current?.editor
+    if (editor) {
+      console.log('Available commands:', Object.keys(editor.commands))
+      editor.commands.insertInlineMath({ latex: 'E = mc^2' })
+    }
+  }
+
+  const handleInsertBlockMath = () => {
+    const editor = editorRef.current?.editor  
+    if (editor) {
+      editor.commands.insertBlockMath({ latex: '\\sum_{i=1}^{n} i = \\frac{n(n+1)}{2}' })
+    }
+  }
+
   return (
     <div className="app">
       <header className="app-header">
@@ -32,6 +48,8 @@ function App() {
         <button onClick={handleGetContent}>Get Content</button>
         <button onClick={handleSetContent}>Set New Content</button>
         <button onClick={() => editorRef.current?.focus()}>Focus Editor</button>
+        <button onClick={handleInsertInlineMath}>Insert Inline Math</button>
+        <button onClick={handleInsertBlockMath}>Insert Block Math</button>
       </div>
 
       <div className="editor-container">

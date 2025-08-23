@@ -35,9 +35,11 @@
   },
   "dependencies": {
     "@tiptap/extension-highlight": "^3.3.0",
+    "@tiptap/extension-mathematics": "^3.3.0",
     "@tiptap/pm": "^3.3.0",
     "@tiptap/react": "^3.3.0",
     "@tiptap/starter-kit": "^3.3.0",
+    "katex": "^0.16.22",
     "lucide-react": "^0.541.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
