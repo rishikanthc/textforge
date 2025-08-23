@@ -4,7 +4,7 @@ import './editor-styles.css'
 import './App.css'
 
 function App() {
-  const [content, setContent] = useState('<h1>Welcome to Quill Editor</h1><p>This is a demo of the extensible Tiptap-based editor library. Try editing this content!</p><h2>Features</h2><ul><li>Beautiful typography with Noto Sans and Space Grotesk fonts</li><li>Extensible and customizable</li><li>Built on Tiptap and ProseMirror</li><li>TypeScript support</li></ul>')
+  const [content, setContent] = useState('<h1>Welcome to Quill Editor</h1><p>This is a demo of the extensible Tiptap-based editor library. Try editing this content!</p><h2>Formatting Features</h2><ul><li><strong>Bold text</strong> works perfectly</li><li><em>Italic text</em> is now enabled</li><li><mark>Highlighting</mark> is available too</li><li>Beautiful typography with Noto Sans and Space Grotesk fonts</li></ul><h3>Try These Shortcuts:</h3><ul><li><strong>Ctrl+B / Cmd+B</strong> for bold</li><li><strong>Ctrl+I / Cmd+I</strong> for italic</li><li><strong>Ctrl+Shift+H / Cmd+Shift+H</strong> for highlight</li><li>Type <code>==text==</code> for highlighting</li><li>Type <code>*text*</code> or <code>_text_</code> for italic</li></ul>')
   const editorRef = useRef<EditorRef>(null)
 
   const handleContentChange = (newContent: string) => {

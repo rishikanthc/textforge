@@ -1,6 +1,7 @@
 import React, { useEffect, useImperativeHandle, forwardRef } from 'react'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
+import Highlight from '@tiptap/extension-highlight'
 
 interface EditorProps {
   content?: string
@@ -25,7 +26,12 @@ const Editor = forwardRef<EditorRef, EditorProps>(({
   editable = true
 }, ref) => {
   const editor = useEditor({
-    extensions: [StarterKit],
+    extensions: [
+      StarterKit,
+      Highlight.configure({
+        multicolor: true
+      })
+    ],
     content,
     editable,
     onUpdate: ({ editor }) => {

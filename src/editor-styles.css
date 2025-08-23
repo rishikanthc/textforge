@@ -18,6 +18,7 @@
   font-size: 16px;
   line-height: 1.6;
   color: #1a1a1a;
+  font-synthesis: auto !important;
 }
 
 .quill-editor .ProseMirror p {
@@ -150,8 +151,9 @@
   font-weight: 600;
 }
 
-.quill-editor .ProseMirror em {
-  font-style: italic;
+.quill-editor .ProseMirror em,
+.quill-editor .ProseMirror i {
+  font-style: italic !important;
 }
 
 /* Horizontal rule */
@@ -170,3 +172,36 @@
 .quill-editor .ProseMirror a:hover {
   text-decoration: underline;
 }
+
+/* Highlight */
+.quill-editor .ProseMirror mark {
+  background-color: #fff3cd;
+  color: #856404;
+  padding: 0.1em 0.2em;
+  border-radius: 2px;
+}
+
+/* Ensure italic text works properly - High priority overrides */
+.quill-editor em,
+.quill-editor i,
+.quill-editor-content em,
+.quill-editor-content i,
+.quill-editor .ProseMirror em,
+.quill-editor .ProseMirror i {
+  font-style: italic !important;
+  font-family: 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  font-synthesis: auto !important;
+}
+
+/* Additional fallback with even higher specificity */
+div.quill-editor div.quill-editor-content div.ProseMirror em,
+div.quill-editor div.quill-editor-content div.ProseMirror i {
+  font-style: italic !important;
+  font-synthesis: auto !important;
+}
+
+/* Clean italic styling now that we have the font variants */
+.quill-editor .ProseMirror em {
+  font-style: italic !important;
+}
+
