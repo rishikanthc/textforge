@@ -67,6 +67,25 @@ function App() {
     }
   }
 
+  // Mock image upload handler - in a real app, this would upload to your server
+  const handleImageUpload = async (file: File): Promise<string> => {
+    console.log('Uploading image:', file.name, file.size, file.type)
+    
+    // Simulate API call delay
+    await new Promise(resolve => setTimeout(resolve, 1000))
+    
+    // In a real implementation, you would:
+    // 1. Upload the file to your server/cloud storage
+    // 2. Return the permanent URL
+    
+    // For demo purposes, we'll create a data URL (not recommended for production)
+    return new Promise((resolve) => {
+      const reader = new FileReader()
+      reader.onload = () => resolve(reader.result as string)
+      reader.readAsDataURL(file)
+    })
+  }
+
   return (
     <div className="app">
       <header className="app-header">
@@ -90,6 +109,7 @@ function App() {
           content={content}
           onChange={handleContentChange}
           placeholder="Start writing your amazing content..."
+          onImageUpload={handleImageUpload}
         />
       </div>
 

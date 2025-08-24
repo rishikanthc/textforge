@@ -35,7 +35,9 @@
   },
   "dependencies": {
     "@tiptap/extension-code-block-lowlight": "^3.3.0",
+    "@tiptap/extension-file-handler": "^3.3.0",
     "@tiptap/extension-highlight": "^3.3.0",
+    "@tiptap/extension-image": "^3.3.0",
     "@tiptap/extension-mathematics": "^3.3.0",
     "@tiptap/pm": "^3.3.0",
     "@tiptap/react": "^3.3.0",

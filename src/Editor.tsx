@@ -3,6 +3,8 @@ import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Highlight from '@tiptap/extension-highlight'
 import { CodeBlockLowlight } from '@tiptap/extension-code-block-lowlight'
+import { FileHandler } from '@tiptap/extension-file-handler'
+import { Image } from '@tiptap/extension-image'
 // Import common programming languages
 import css from 'highlight.js/lib/languages/css'
 import js from 'highlight.js/lib/languages/javascript'
@@ -49,6 +51,7 @@ interface EditorProps {
   className?: string
   placeholder?: string
   editable?: boolean
+  onImageUpload?: (file: File) => Promise<string> // Returns the URL to use for the image
 }
 
 export interface EditorRef {
@@ -64,7 +67,8 @@ const Editor = forwardRef<EditorRef, EditorProps>(({
   onChange,
   className = '',
   placeholder = 'Start writing...',
-  editable = true
+  editable = true,
+  onImageUpload
 }, ref) => {
   const [mathDialog, setMathDialog] = useState<{
     isOpen: boolean
@@ -122,6 +126,109 @@ const Editor = forwardRef<EditorRef, EditorProps>(({
           },
           trust: (context) => ['\\htmlId', '\\href', '\\class', '\\style', '\\data'].includes(context.command)
         }
+      }),
+      Image.configure({
+        inline: true,
+        HTMLAttributes: {
+          class: 'editor-image',
+        },
+      }),
+      FileHandler.configure({
+        allowedMimeTypes: ['image/png', 'image/jpeg', 'image/gif', 'image/webp'],
+        onDrop: async (currentEditor, files, pos) => {
+          if (!onImageUpload) {
+            console.warn('onImageUpload callback not provided - using local file URLs')
+            // Fallback to data URLs if no upload handler provided
+            files.forEach(file => {
+              const fileReader = new FileReader()
+              fileReader.readAsDataURL(file)
+              fileReader.onload = () => {
+                currentEditor
+                  .chain()
+                  .insertContentAt(pos, {
+                    type: 'image',
+                    attrs: {
+                      src: fileReader.result,
+                      alt: file.name,
+                    },
+                  })
+                  .focus()
+                  .run()
+              }
+            })
+            return
+          }
+
+          // Use the provided upload handler
+          for (const file of files) {
+            try {
+              const url = await onImageUpload(file)
+              currentEditor
+                .chain()
+                .insertContentAt(pos, {
+                  type: 'image',
+                  attrs: {
+                    src: url,
+                    alt: file.name,
+                  },
+                })
+                .focus()
+                .run()
+            } catch (error) {
+              console.error('Failed to upload image:', error)
+            }
+          }
+        },
+        onPaste: async (currentEditor, files, htmlContent) => {
+          if (htmlContent) {
+            // Let other extensions handle HTML content insertion
+            console.log('HTML content pasted:', htmlContent)
+            return false
+          }
+
+          if (!onImageUpload) {
+            console.warn('onImageUpload callback not provided - using local file URLs')
+            // Fallback to data URLs
+            files.forEach(file => {
+              const fileReader = new FileReader()
+              fileReader.readAsDataURL(file)
+              fileReader.onload = () => {
+                currentEditor
+                  .chain()
+                  .insertContentAt(currentEditor.state.selection.anchor, {
+                    type: 'image',
+                    attrs: {
+                      src: fileReader.result,
+                      alt: file.name,
+                    },
+                  })
+                  .focus()
+                  .run()
+              }
+            })
+            return
+          }
+
+          // Use the provided upload handler
+          for (const file of files) {
+            try {
+              const url = await onImageUpload(file)
+              currentEditor
+                .chain()
+                .insertContentAt(currentEditor.state.selection.anchor, {
+                  type: 'image',
+                  attrs: {
+                    src: url,
+                    alt: file.name,
+                  },
+                })
+                .focus()
+                .run()
+            } catch (error) {
+              console.error('Failed to upload image:', error)
+            }
+          }
+        },
       }),
       MathInputRules,
       Callout
