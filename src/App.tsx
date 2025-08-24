@@ -6,9 +6,26 @@ import './App.css'
 function App() {
   const [content, setContent] = useState('<h1>Welcome to Quill Editor</h1><p>This is a demo of the extensible Tiptap-based editor library. Try editing this content!</p><h2>Formatting Features</h2><ul><li><strong>Bold text</strong> works perfectly</li><li><em>Italic text</em> is now enabled</li><li><mark>Highlighting</mark> is available too</li><li>Beautiful typography with Noto Sans and Space Grotesk fonts</li></ul><h3>Try These Shortcuts:</h3><ul><li><strong>Ctrl+B / Cmd+B</strong> for bold</li><li><strong>Ctrl+I / Cmd+I</strong> for italic</li><li><strong>Ctrl+Shift+H / Cmd+Shift+H</strong> for highlight</li><li>Type <code>==text==</code> for highlighting</li><li>Type <code>*text*</code> or <code>_text_</code> for italic</li></ul>')
   const editorRef = useRef<EditorRef>(null)
+  
+  // Auto-save demo state
+  const [autoSaveEnabled, setAutoSaveEnabled] = useState(true)
+  const [autoSaveDelay, setAutoSaveDelay] = useState(250)
+  const [lastAutoSaved, setLastAutoSaved] = useState<Date | null>(null)
+  const [autoSaveCount, setAutoSaveCount] = useState(0)
 
   const handleContentChange = (newContent: string) => {
     setContent(newContent)
+  }
+
+  // Auto-save handler function
+  const handleAutoSave = (content: string) => {
+    console.log('Auto-saving content:', content.slice(0, 100) + '...')
+    setLastAutoSaved(new Date())
+    setAutoSaveCount(prev => prev + 1)
+    
+    // In a real application, you would save to your backend here
+    // For demo purposes, we're just simulating the save operation
+    localStorage.setItem('quill-editor-autosave', content)
   }
 
   const handleGetContent = () => {
@@ -103,6 +120,40 @@ function App() {
         <button onClick={handleInsertCodeBlock}>Insert Code Block</button>
       </div>
 
+      <div className="auto-save-controls">
+        <h3>Auto-Save Demo</h3>
+        <div className="auto-save-settings">
+          <label>
+            <input
+              type="checkbox"
+              checked={autoSaveEnabled}
+              onChange={(e) => setAutoSaveEnabled(e.target.checked)}
+            />
+            Enable Auto-Save
+          </label>
+          
+          <label>
+            Delay (ms):
+            <input
+              type="number"
+              value={autoSaveDelay}
+              onChange={(e) => setAutoSaveDelay(Number(e.target.value))}
+              min="100"
+              max="5000"
+              step="50"
+            />
+          </label>
+        </div>
+        
+        <div className="auto-save-status">
+          <p><strong>Auto-save count:</strong> {autoSaveCount}</p>
+          {lastAutoSaved && (
+            <p><strong>Last auto-saved:</strong> {lastAutoSaved.toLocaleTimeString()}</p>
+          )}
+          <p><em>Start typing in the editor to see auto-save in action!</em></p>
+        </div>
+      </div>
+
       <div className="editor-container">
         <Editor
           ref={editorRef}
@@ -110,6 +161,8 @@ function App() {
           onChange={handleContentChange}
           placeholder="Start writing your amazing content..."
           onImageUpload={handleImageUpload}
+          onAutoSave={autoSaveEnabled ? handleAutoSave : undefined}
+          autoSaveDelay={autoSaveDelay}
         />
       </div>
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useImperativeHandle, forwardRef, useState } from 'react'
+import React, { useEffect, useImperativeHandle, forwardRef, useState, useCallback, useRef } from 'react'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Highlight from '@tiptap/extension-highlight'
@@ -45,6 +45,48 @@ import { MathInputRules } from './extensions/MathInputRules'
 import { MathEditDialog } from './components/MathEditDialog'
 import 'katex/dist/katex.min.css'
 
+// Custom hook for debouncing auto-save
+const useAutoSave = (
+  callback: ((content: string) => void | Promise<void>) | undefined,
+  delay: number = 250
+) => {
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const savedCallbackRef = useRef(callback)
+
+  // Update callback ref when callback changes
+  useEffect(() => {
+    savedCallbackRef.current = callback
+  }, [callback])
+
+  const debouncedAutoSave = useCallback(
+    (content: string) => {
+      if (!savedCallbackRef.current) return
+
+      // Clear existing timeout
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+      }
+
+      // Set new timeout
+      timeoutRef.current = setTimeout(() => {
+        savedCallbackRef.current?.(content)
+      }, delay)
+    },
+    [delay]
+  )
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+      }
+    }
+  }, [])
+
+  return debouncedAutoSave
+}
+
 interface EditorProps {
   content?: string
   onChange?: (content: string) => void
@@ -52,6 +94,8 @@ interface EditorProps {
   placeholder?: string
   editable?: boolean
   onImageUpload?: (file: File) => Promise<string> // Returns the URL to use for the image
+  onAutoSave?: (content: string) => void | Promise<void> // Callback for auto-save functionality
+  autoSaveDelay?: number // Debounce delay in milliseconds (default: 250ms)
 }
 
 export interface EditorRef {
@@ -68,7 +112,9 @@ const Editor = forwardRef<EditorRef, EditorProps>(({
   className = '',
   placeholder = 'Start writing...',
   editable = true,
-  onImageUpload
+  onImageUpload,
+  onAutoSave,
+  autoSaveDelay = 250
 }, ref) => {
   const [mathDialog, setMathDialog] = useState<{
     isOpen: boolean
@@ -80,6 +126,9 @@ const Editor = forwardRef<EditorRef, EditorProps>(({
     latex: '',
     isBlockMath: false,
   })
+
+  // Initialize auto-save hook
+  const debouncedAutoSave = useAutoSave(onAutoSave, autoSaveDelay)
 
   const editor = useEditor({
     extensions: [
@@ -238,6 +287,8 @@ const Editor = forwardRef<EditorRef, EditorProps>(({
     onUpdate: ({ editor }) => {
       const html = editor.getHTML()
       onChange?.(html)
+      // Trigger debounced auto-save
+      debouncedAutoSave(html)
     },
   })
 
