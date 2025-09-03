@@ -1,6 +1,5 @@
-import React from 'react'
 import { Extension, Node, mergeAttributes } from '@tiptap/core'
-import { NodeViewWrapper, NodeViewContent, ReactNodeViewRenderer } from '@tiptap/react'
+import { NodeViewWrapper, NodeViewContent, ReactNodeViewRenderer, type ReactNodeViewProps } from '@tiptap/react'
 import { Plugin, PluginKey, TextSelection } from '@tiptap/pm/state'
 import { 
   Info, 
@@ -10,21 +9,7 @@ import {
   Zap 
 } from 'lucide-react'
 
-interface CalloutNodeViewProps {
-  node: {
-    attrs: {
-      type: string
-    }
-  }
-  updateAttributes: (attrs: any) => void
-  deleteNode: () => void
-  selected: boolean
-}
-
-const CalloutNodeView: React.FC<CalloutNodeViewProps> = ({
-  node,
-  selected
-}) => {
+const CalloutNodeView = ({ node, selected }: ReactNodeViewProps) => {
   const { type } = node.attrs
 
   const getIcon = () => {
@@ -198,10 +183,10 @@ export const Callout = Extension.create({
 
   addCommands() {
     return {
-      setCallout: (attributes) => ({ commands }) => {
-        return commands.setNode('calloutNode', attributes)
-      },
-    }
+      setCallout:
+        (attributes: { type: string }) => ({ commands }: { commands: any }) =>
+          commands.setNode('calloutNode', attributes),
+    } as any
   },
 })
 

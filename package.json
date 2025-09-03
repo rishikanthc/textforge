@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "type": "module",
   "description": "A beautiful, extensible rich text editor built with Tiptap and React",
-  "main": "dist/index.js",
+  "main": "dist/index.umd.js",
   "module": "dist/index.es.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -13,7 +13,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "build:lib": "tsc && vite build --mode lib",
+    "build:types": "tsc -p tsconfig.build.json",
+    "build:lib": "npm run build:types && vite build --mode lib",
     "lint": "eslint .",
     "preview": "vite preview",
     "prepublishOnly": "npm run build:lib"
@@ -33,20 +34,22 @@
     "type": "git",
     "url": "https://github.com/yourusername/quill-editor.git"
   },
-  "dependencies": {
-    "@tiptap/extension-code-block-lowlight": "^3.3.0",
-    "@tiptap/extension-file-handler": "^3.3.0",
-    "@tiptap/extension-highlight": "^3.3.0",
-    "@tiptap/extension-image": "^3.3.0",
-    "@tiptap/extension-mathematics": "^3.3.0",
-    "@tiptap/pm": "^3.3.0",
-    "@tiptap/react": "^3.3.0",
-    "@tiptap/starter-kit": "^3.3.0",
-    "katex": "^0.16.22",
-    "lowlight": "^3.3.0",
-    "lucide-react": "^0.541.0",
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+  "peerDependencies": {
+    "@tiptap/core": "^3",
+    "@tiptap/extension-code-block-lowlight": "^3",
+    "@tiptap/extension-file-handler": "^3",
+    "@tiptap/extension-highlight": "^3",
+    "@tiptap/extension-image": "^3",
+    "@tiptap/extension-mathematics": "^3",
+    "@tiptap/extension-placeholder": "^3.3.1",
+    "@tiptap/pm": "^3",
+    "@tiptap/react": "^3",
+    "@tiptap/starter-kit": "^3",
+    "katex": "^0.16",
+    "lowlight": "^3",
+    "lucide-react": ">=0.300.0",
+    "react": "^18.2.0 || ^19.0.0",
+    "react-dom": "^18.2.0 || ^19.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",
@@ -60,5 +63,17 @@
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.39.1",
     "vite": "^7.1.2"
-  }
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.es.js",
+      "default": "./dist/index.umd.js"
+    },
+    "./dist/quill.css": "./dist/quill.css"
+  },
+  "style": "dist/quill.css",
+  "sideEffects": [
+    "**/*.css"
+  ]
 }

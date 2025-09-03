@@ -15,7 +15,23 @@ export default defineConfig(({ mode }) => {
           fileName: (format) => `index.${format}.js`
         },
         rollupOptions: {
-          external: ['react', 'react-dom'],
+          external: [
+            'react',
+            'react-dom',
+            '@tiptap/core',
+            '@tiptap/pm',
+            '@tiptap/react',
+            '@tiptap/starter-kit',
+            '@tiptap/extension-code-block-lowlight',
+            '@tiptap/extension-file-handler',
+            '@tiptap/extension-highlight',
+            '@tiptap/extension-image',
+            '@tiptap/extension-mathematics',
+            '@tiptap/extension-placeholder',
+            'katex',
+            'lowlight',
+            'lucide-react'
+          ],
           output: {
             globals: {
               react: 'React',

@@ -1,7 +1,8 @@
-import React, { useEffect, useImperativeHandle, forwardRef, useState, useCallback, useRef } from 'react'
+import { useEffect, useImperativeHandle, forwardRef, useState, useCallback, useRef } from 'react'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Highlight from '@tiptap/extension-highlight'
+import Placeholder from '@tiptap/extension-placeholder'
 import { CodeBlockLowlight } from '@tiptap/extension-code-block-lowlight'
 import { FileHandler } from '@tiptap/extension-file-handler'
 import { Image } from '@tiptap/extension-image'
@@ -51,7 +52,7 @@ const useAutoSave = (
   callback: ((content: string) => void | Promise<void>) | undefined,
   delay: number = 250
 ) => {
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const savedCallbackRef = useRef(callback)
 
   // Update callback ref when callback changes
@@ -146,6 +147,10 @@ const Editor = forwardRef<EditorRef, EditorProps>(({
     extensions: [
       StarterKit.configure({
         codeBlock: false, // Disable default code block to use CodeBlockLowlight
+      }),
+      Placeholder.configure({
+        placeholder,
+        includeChildren: true,
       }),
       CodeBlockLowlight.configure({
         lowlight,
@@ -358,7 +363,7 @@ const Editor = forwardRef<EditorRef, EditorProps>(({
   const preset = fonts ? undefined : getPresetById(typographyPreset)
   const bodyFont = fonts?.body ?? preset?.body
   const headingFont = fonts?.heading ?? preset?.heading
-  const styleVars: React.CSSProperties = {}
+  const styleVars: Record<string, string> = {}
   if (bodyFont) (styleVars as any)['--font-body'] = bodyFont
   if (headingFont) (styleVars as any)['--font-heading'] = headingFont
 
