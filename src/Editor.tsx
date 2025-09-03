@@ -44,6 +44,7 @@ import { Callout } from './extensions/Callout'
 import { MathInputRules } from './extensions/MathInputRules'
 import { MathEditDialog } from './components/MathEditDialog'
 import 'katex/dist/katex.min.css'
+import { getPresetById, type TypographyPresetId } from './typography'
 
 // Custom hook for debouncing auto-save
 const useAutoSave = (
@@ -96,6 +97,15 @@ interface EditorProps {
   onImageUpload?: (file: File) => Promise<string> // Returns the URL to use for the image
   onAutoSave?: (content: string) => void | Promise<void> // Callback for auto-save functionality
   autoSaveDelay?: number // Debounce delay in milliseconds (default: 250ms)
+  /**
+   * Optional typography preset id. When provided, the editor will set CSS variables
+   * `--font-body` and `--font-heading` on its root container, scoping fonts to this instance.
+   */
+  typographyPreset?: TypographyPresetId
+  /**
+   * Direct font overrides. If provided, takes precedence over `typographyPreset`.
+   */
+  fonts?: { body?: string; heading?: string }
 }
 
 export interface EditorRef {
@@ -114,7 +124,9 @@ const Editor = forwardRef<EditorRef, EditorProps>(({
   editable = true,
   onImageUpload,
   onAutoSave,
-  autoSaveDelay = 250
+  autoSaveDelay = 250,
+  typographyPreset,
+  fonts
 }, ref) => {
   const [mathDialog, setMathDialog] = useState<{
     isOpen: boolean
@@ -342,8 +354,16 @@ const Editor = forwardRef<EditorRef, EditorProps>(({
     return null
   }
 
+  // Compute scoped typography variables if configured
+  const preset = fonts ? undefined : getPresetById(typographyPreset)
+  const bodyFont = fonts?.body ?? preset?.body
+  const headingFont = fonts?.heading ?? preset?.heading
+  const styleVars: React.CSSProperties = {}
+  if (bodyFont) (styleVars as any)['--font-body'] = bodyFont
+  if (headingFont) (styleVars as any)['--font-heading'] = headingFont
+
   return (
-    <div className={`quill-editor ${className}`}>
+    <div className={`quill-editor ${className}`} style={styleVars}>
       <EditorContent 
         editor={editor}
         className="quill-editor-content"

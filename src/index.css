@@ -1,11 +1,13 @@
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+  /* Typography variables */
+  --font-body: 'Figtree', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  --font-heading: 'Manrope', 'Figtree', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  font-family: var(--font-body);
+  line-height: 1.6;
+  font-weight: 400;
+  color: #111827; /* slate-900 */
+  background-color: #ffffff;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -57,13 +59,14 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+/* Light theme defaults */
 @media (prefers-color-scheme: light) {
   :root {
-    color: #213547;
+    color: #111827;
     background-color: #ffffff;
   }
   a:hover {
-    color: #747bff;
+    color: #3b5bff;
   }
   button {
     background-color: #f9f9f9;

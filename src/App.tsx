@@ -1,10 +1,11 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import Editor, { type EditorRef } from './Editor'
 import './editor-styles.css'
 import './App.css'
+import { TYPOGRAPHY_PRESETS, getPresetById, type TypographyPresetId } from './typography'
 
 function App() {
-  const [content, setContent] = useState('<h1>Welcome to Quill Editor</h1><p>This is a demo of the extensible Tiptap-based editor library. Try editing this content!</p><h2>Formatting Features</h2><ul><li><strong>Bold text</strong> works perfectly</li><li><em>Italic text</em> is now enabled</li><li><mark>Highlighting</mark> is available too</li><li>Beautiful typography with Noto Sans and Space Grotesk fonts</li></ul><h3>Try These Shortcuts:</h3><ul><li><strong>Ctrl+B / Cmd+B</strong> for bold</li><li><strong>Ctrl+I / Cmd+I</strong> for italic</li><li><strong>Ctrl+Shift+H / Cmd+Shift+H</strong> for highlight</li><li>Type <code>==text==</code> for highlighting</li><li>Type <code>*text*</code> or <code>_text_</code> for italic</li></ul>')
+  const [content, setContent] = useState('<h1>Welcome to Quill Editor</h1><p>This is a demo of the extensible Tiptap-based editor library. Try editing this content!</p><h2>Typography & Formatting</h2><ul><li><strong>Bold text</strong> for emphasis</li><li><em>Italic text</em> for nuance</li><li><mark>Highlighting</mark> when needed</li><li>Experiment with the typography presets in the demo controls</li></ul><h3>Try These Shortcuts:</h3><ul><li><strong>Ctrl+B / Cmd+B</strong> for bold</li><li><strong>Ctrl+I / Cmd+I</strong> for italic</li><li><strong>Ctrl+Shift+H / Cmd+Shift+H</strong> for highlight</li><li>Type <code>==text==</code> for highlighting</li><li>Type <code>*text*</code> or <code>_text_</code> for italic</li></ul>')
   const editorRef = useRef<EditorRef>(null)
   
   // Auto-save demo state
@@ -84,6 +85,16 @@ function App() {
     }
   }
 
+  const [fontPreset, setFontPreset] = useState<TypographyPresetId>(() => (localStorage.getItem('quill-font-preset') as TypographyPresetId) || 'figtree-manrope')
+
+  useEffect(() => {
+    const preset = getPresetById(fontPreset) || TYPOGRAPHY_PRESETS[0]
+    const root = document.documentElement
+    root.style.setProperty('--font-body', preset.body)
+    root.style.setProperty('--font-heading', preset.heading)
+    localStorage.setItem('quill-font-preset', preset.id)
+  }, [fontPreset])
+
   // Mock image upload handler - in a real app, this would upload to your server
   const handleImageUpload = async (file: File): Promise<string> => {
     console.log('Uploading image:', file.name, file.size, file.type)
@@ -118,6 +129,18 @@ function App() {
         <button onClick={handleInsertBlockMath}>Insert Block Math</button>
         <button onClick={handleInsertAlignTest}>Test Align</button>
         <button onClick={handleInsertCodeBlock}>Insert Code Block</button>
+        <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          Typography:
+          <select
+            value={fontPreset}
+            onChange={(e) => setFontPreset(e.target.value)}
+            style={{ padding: '0.5rem', borderRadius: 6 }}
+          >
+            {TYPOGRAPHY_PRESETS.map(p => (
+              <option key={p.id} value={p.id}>{p.label}</option>
+            ))}
+          </select>
+        </label>
       </div>
 
       <div className="auto-save-controls">
