@@ -43,6 +43,8 @@ lowlight.register('md', markdown)
 import { Mathematics } from '@tiptap/extension-mathematics'
 import { Callout } from './extensions/Callout'
 import { MathInputRules } from './extensions/MathInputRules'
+import Link from '@tiptap/extension-link'
+import { MarkdownLink } from './extensions/MarkdownLink'
 import { MathEditDialog } from './components/MathEditDialog'
 import 'katex/dist/katex.min.css'
 import { getPresetById, type TypographyPresetId } from './typography'
@@ -147,6 +149,12 @@ const Editor = forwardRef<EditorRef, EditorProps>(({
     extensions: [
       StarterKit.configure({
         codeBlock: false, // Disable default code block to use CodeBlockLowlight
+      }),
+      // Link mark for hyperlinks (required for MarkdownLink input rule)
+      Link.configure({
+        openOnClick: true,
+        autolink: false,
+        linkOnPaste: false,
       }),
       Placeholder.configure({
         placeholder,
@@ -297,6 +305,7 @@ const Editor = forwardRef<EditorRef, EditorProps>(({
         },
       }),
       MathInputRules,
+      MarkdownLink,
       Callout
     ],
     content,

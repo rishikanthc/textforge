@@ -9,45 +9,52 @@ export const MathInputRules = Extension.create({
       // Inline math: $...$
       new InputRule({
         find: /\$([^$\n\r]+)\$$/,
-        handler: ({ state, range, match }) => {
+        handler: ({ state, range, match, commands }) => {
           const [, latex] = match
-          const { tr } = state
-          const start = range.from
-          const end = range.to
-
           if (!latex.trim()) return null
 
-          tr.delete(start, end)
-
-          if (state.schema.nodes.inlineMath) {
-            const inlineMathNode = state.schema.nodes.inlineMath.create({ latex: latex.trim() })
-            tr.insert(start, inlineMathNode)
+          // Use commands instead of direct transaction manipulation
+          commands.deleteRange(range)
+          
+          // Try different possible node names using commands
+          const nodeTypes = ['inline-math', 'inlineMath', 'math_inline', 'mathematics_inline']
+          
+          for (const nodeType of nodeTypes) {
+            if (state.schema.nodes[nodeType]) {
+              // Use insertContentAt to insert the math node
+              commands.insertContentAt(range.from, {
+                type: nodeType,
+                attrs: { latex: latex.trim() }
+              })
+              return
+            }
           }
-
-          // No return value required; Tiptap applies the transaction
-          return null
         },
       }),
 
       // Block math: $$...$$
       new InputRule({
         find: /\$\$([^]*?)\$\$$/,
-        handler: ({ state, range, match }) => {
+        handler: ({ state, range, match, commands }) => {
           const [, latex] = match
-          const { tr } = state
-          const start = range.from
-          const end = range.to
-
           if (!latex.trim()) return null
 
-          tr.delete(start, end)
-
-          if (state.schema.nodes.blockMath) {
-            const blockMathNode = state.schema.nodes.blockMath.create({ latex: latex.trim() })
-            tr.insert(start, blockMathNode)
+          // Use commands instead of direct transaction manipulation
+          commands.deleteRange(range)
+          
+          // Try different possible node names using commands
+          const nodeTypes = ['block-math', 'blockMath', 'math_display', 'mathematics_display']
+          
+          for (const nodeType of nodeTypes) {
+            if (state.schema.nodes[nodeType]) {
+              // Use insertContentAt to insert the math node
+              commands.insertContentAt(range.from, {
+                type: nodeType,
+                attrs: { latex: latex.trim() }
+              })
+              return
+            }
           }
-
-          return null
         },
       }),
     ]
