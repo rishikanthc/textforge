@@ -9,7 +9,7 @@ export default defineConfig(({ mode }) => {
       plugins: [react()],
       build: {
         lib: {
-          entry: resolve(__dirname, 'src/index.ts'),
+          entry: resolve(process.cwd(), 'src/index.ts'),
           name: 'QuillEditor',
           formats: ['es', 'umd'],
           fileName: (format) => `index.${format}.js`

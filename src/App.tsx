@@ -1,11 +1,26 @@
 import { useState, useRef, useEffect } from 'react'
 import Editor, { type EditorRef } from './Editor'
+import { type MentionItem } from './components/MentionList'
 import './editor-styles.css'
 import './App.css'
 import { TYPOGRAPHY_PRESETS, getPresetById, type TypographyPresetId } from './typography'
 
 function App() {
-  const [content, setContent] = useState('<h1>Welcome to Quill Editor</h1><p>This is a demo of the extensible Tiptap-based editor library. Try editing this content!</p><h2>Typography & Formatting</h2><ul><li><strong>Bold text</strong> for emphasis</li><li><em>Italic text</em> for nuance</li><li><mark>Highlighting</mark> when needed</li><li>Experiment with the typography presets in the demo controls</li></ul><h3>Try These Shortcuts:</h3><ul><li><strong>Ctrl+B / Cmd+B</strong> for bold</li><li><strong>Ctrl+I / Cmd+I</strong> for italic</li><li><strong>Ctrl+Shift+H / Cmd+Shift+H</strong> for highlight</li><li>Type <code>==text==</code> for highlighting</li><li>Type <code>*text*</code> or <code>_text_</code> for italic</li></ul>')
+  const [content, setContent] = useState('<h1>Welcome to Quill Editor</h1><p>This is a demo of the extensible Tiptap-based editor library. Try editing this content!</p><h2>Typography & Formatting</h2><ul><li><strong>Bold text</strong> for emphasis</li><li><em>Italic text</em> for nuance</li><li><mark>Highlighting</mark> when needed</li><li>Experiment with the typography presets in the demo controls</li></ul><h3>Try These Features:</h3><ul><li><strong>Ctrl+B / Cmd+B</strong> for bold</li><li><strong>Ctrl+I / Cmd+I</strong> for italic</li><li><strong>Ctrl+Shift+H / Cmd+Shift+H</strong> for highlight</li><li>Type <code>==text==</code> for highlighting</li><li>Type <code>*text*</code> or <code>_text_</code> for italic</li><li>Type <code>@</code> to mention someone</li></ul>')
+
+  // Mock mention data
+  const mentionItems: MentionItem[] = [
+    { id: 'john-doe', label: 'John Doe', url: '/users/john-doe' },
+    { id: 'jane-smith', label: 'Jane Smith', url: '/users/jane-smith' },
+    { id: 'alex-johnson', label: 'Alex Johnson', url: '/users/alex-johnson' },
+    { id: 'sarah-wilson', label: 'Sarah Wilson', url: '/users/sarah-wilson' },
+    { id: 'mike-brown', label: 'Mike Brown', url: '/users/mike-brown' },
+    { id: 'emily-davis', label: 'Emily Davis', url: '/users/emily-davis' },
+    { id: 'tom-miller', label: 'Tom Miller', url: '/users/tom-miller' },
+    { id: 'lisa-garcia', label: 'Lisa Garcia', url: '/users/lisa-garcia' },
+    { id: 'david-martinez', label: 'David Martinez', url: '/users/david-martinez' },
+    { id: 'anna-taylor', label: 'Anna Taylor', url: '/users/anna-taylor' },
+  ]
   const editorRef = useRef<EditorRef>(null)
   
   // Auto-save demo state
@@ -186,6 +201,7 @@ function App() {
           onImageUpload={handleImageUpload}
           onAutoSave={autoSaveEnabled ? handleAutoSave : undefined}
           autoSaveDelay={autoSaveDelay}
+          mentions={mentionItems}
         />
       </div>
 

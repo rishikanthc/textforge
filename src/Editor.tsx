@@ -43,11 +43,13 @@ lowlight.register('md', markdown)
 import { Mathematics } from '@tiptap/extension-mathematics'
 import { Callout } from './extensions/Callout'
 import { MathInputRules } from './extensions/MathInputRules'
-import Link from '@tiptap/extension-link'
 import { MarkdownLink } from './extensions/MarkdownLink'
 import { MathEditDialog } from './components/MathEditDialog'
 import 'katex/dist/katex.min.css'
 import { getPresetById, type TypographyPresetId } from './typography'
+import Mention from '@tiptap/extension-mention'
+import { type MentionItem } from './components/MentionList'
+import { createMentionSuggestion } from './utils/mentionSuggestion'
 
 // Custom hook for debouncing auto-save
 const useAutoSave = (
@@ -109,6 +111,10 @@ interface EditorProps {
    * Direct font overrides. If provided, takes precedence over `typographyPreset`.
    */
   fonts?: { body?: string; heading?: string }
+  /**
+   * Array of mention items for @mention suggestions
+   */
+  mentions?: MentionItem[]
 }
 
 export interface EditorRef {
@@ -129,7 +135,8 @@ const Editor = forwardRef<EditorRef, EditorProps>(({
   onAutoSave,
   autoSaveDelay = 250,
   typographyPreset,
-  fonts
+  fonts,
+  mentions = []
 }, ref) => {
   const [mathDialog, setMathDialog] = useState<{
     isOpen: boolean
@@ -149,12 +156,11 @@ const Editor = forwardRef<EditorRef, EditorProps>(({
     extensions: [
       StarterKit.configure({
         codeBlock: false, // Disable default code block to use CodeBlockLowlight
-      }),
-      // Link mark for hyperlinks (required for MarkdownLink input rule)
-      Link.configure({
-        openOnClick: true,
-        autolink: false,
-        linkOnPaste: false,
+        link: {
+          openOnClick: true,
+          autolink: false,
+          linkOnPaste: false,
+        },
       }),
       Placeholder.configure({
         placeholder,
@@ -306,7 +312,24 @@ const Editor = forwardRef<EditorRef, EditorProps>(({
       }),
       MathInputRules,
       MarkdownLink,
-      Callout
+      Callout,
+      ...(mentions.length > 0 ? [Mention.configure({
+        HTMLAttributes: {
+          class: 'mention',
+        },
+        renderHTML({ node }) {
+          return [
+            'a',
+            {
+              class: 'mention',
+              href: node.attrs.url || '#',
+              'data-mention-id': node.attrs.id,
+            },
+            node.attrs.label || node.attrs.id,
+          ]
+        },
+        suggestion: createMentionSuggestion(mentions),
+      })] : [])
     ],
     content,
     editable,

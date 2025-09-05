@@ -1,7 +1,7 @@
 {
   "name": "textforge",
   "private": false,
-  "version": "1.0.2",
+  "version": "1.0.3",
   "type": "module",
   "description": "A beautiful, extensible rich text editor built with Tiptap and React",
   "main": "dist/index.umd.js",
@@ -53,6 +53,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",
+    "@types/node": "^24.3.1",
     "@types/react": "^19.1.10",
     "@types/react-dom": "^19.1.7",
     "@vitejs/plugin-react": "^5.0.0",
@@ -75,5 +76,10 @@
   "style": "dist/quill.css",
   "sideEffects": [
     "**/*.css"
-  ]
+  ],
+  "dependencies": {
+    "@floating-ui/dom": "^1.7.4",
+    "@tiptap/extension-mention": "^3.4.1",
+    "@tiptap/suggestion": "^3.4.1"
+  }
 }

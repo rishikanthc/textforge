@@ -13,8 +13,8 @@ export const MarkdownLink = Extension.create({
     return [
       new InputRule({
         find: MARKDOWN_LINK_REGEX,
-        handler: ({ state, range, match, commands }) => {
-          const [fullMatch, alias, href] = match as unknown as [string, string, string]
+        handler: ({ range, match, commands }) => {
+          const [, alias, href] = match as unknown as [string, string, string]
 
           const text = (alias || '').trim()
           const url = (href || '').trim()
