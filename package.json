@@ -1,7 +1,7 @@
 {
   "name": "textforge",
   "private": false,
-  "version": "1.0.3",
+  "version": "1.2.3",
   "type": "module",
   "description": "A beautiful, extensible rich text editor built with Tiptap and React",
   "main": "dist/index.umd.js",
@@ -47,9 +47,9 @@
     "@tiptap/starter-kit": "^3",
     "katex": "^0.16",
     "lowlight": "^3",
-    "lucide-react": ">=0.300.0",
-    "react": "^18.2.0 || ^19.0.0",
-    "react-dom": "^18.2.0 || ^19.0.0"
+    "lucide-react": "^0.542.0",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",
@@ -61,6 +61,9 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^16.3.0",
+    "lucide-react": "^0.542.0",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.39.1",
     "vite": "^7.1.2"
@@ -71,9 +74,9 @@
       "import": "./dist/index.es.js",
       "default": "./dist/index.umd.js"
     },
-    "./dist/quill.css": "./dist/quill.css"
+    "./dist/textforge.css": "./dist/textforge.css"
   },
-  "style": "dist/quill.css",
+  "style": "dist/textforge.css",
   "sideEffects": [
     "**/*.css"
   ],

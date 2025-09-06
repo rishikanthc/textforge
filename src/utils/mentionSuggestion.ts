@@ -45,7 +45,7 @@ export const createMentionSuggestion = (mentionItems: MentionItem[]) => ({
           return
         }
 
-        popup = component.element
+        popup = component.element as HTMLElement
         popup.style.position = 'absolute'
         popup.style.zIndex = '9999'
 
@@ -69,7 +69,7 @@ export const createMentionSuggestion = (mentionItems: MentionItem[]) => ({
           return true
         }
 
-        return component.ref?.onKeyDown(props)
+        return (component.ref as any)?.onKeyDown?.(props)
       },
 
       onExit() {

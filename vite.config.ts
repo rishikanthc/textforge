@@ -28,14 +28,19 @@ export default defineConfig(({ mode }) => {
             '@tiptap/extension-image',
             '@tiptap/extension-mathematics',
             '@tiptap/extension-placeholder',
+            '@tiptap/extension-mention',
+            '@tiptap/suggestion',
             'katex',
             'lowlight',
-            'lucide-react'
+            'lucide-react',
+            '@floating-ui/dom'
           ],
           output: {
             globals: {
-              react: 'React',
-              'react-dom': 'ReactDOM'
+              'react': 'React',
+              'react-dom': 'ReactDOM',
+              '@tiptap/core': 'TiptapCore',
+              '@tiptap/react': 'TiptapReact'
             }
           }
         }
