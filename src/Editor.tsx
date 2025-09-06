@@ -47,9 +47,9 @@ import { MarkdownLink } from './extensions/MarkdownLink'
 import { MathEditDialog } from './components/MathEditDialog'
 import 'katex/dist/katex.min.css'
 import { getPresetById, type TypographyPresetId } from './typography'
-import Mention from '@tiptap/extension-mention'
 import { type MentionItem } from './components/MentionList'
 import { createMentionSuggestion } from './utils/mentionSuggestion'
+import { CustomMention } from './extensions/CustomMention'
 
 // Custom hook for debouncing auto-save
 const useAutoSave = (
@@ -313,20 +313,9 @@ const Editor = forwardRef<EditorRef, EditorProps>(({
       MathInputRules,
       MarkdownLink,
       Callout,
-      ...(mentions.length > 0 ? [Mention.configure({
+      ...(mentions && mentions.length > 0 ? [CustomMention.configure({
         HTMLAttributes: {
           class: 'mention',
-        },
-        renderHTML({ node }) {
-          return [
-            'a',
-            {
-              class: 'mention',
-              href: node.attrs.url || '#',
-              'data-mention-id': node.attrs.id,
-            },
-            node.attrs.label || node.attrs.id,
-          ]
         },
         suggestion: createMentionSuggestion(mentions),
       })] : [])

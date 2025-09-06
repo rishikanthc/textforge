@@ -22,6 +22,9 @@ const updatePosition = (editor: any, element: HTMLElement) => {
 
 export const createMentionSuggestion = (mentionItems: MentionItem[]) => ({
   items: ({ query }: { query: string }) => {
+    if (!mentionItems || !Array.isArray(mentionItems)) {
+      return []
+    }
     return mentionItems
       .filter(item => 
         item.label.toLowerCase().includes(query.toLowerCase()) ||
