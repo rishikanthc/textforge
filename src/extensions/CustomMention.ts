@@ -31,6 +31,8 @@ export const CustomMention = Mention.extend({
         'data-link-type': 'bidirectional',
         'data-mention-label': node.attrs.label || node.attrs.id,
         'data-mention-url': node.attrs.url || '#',
+        // Ensure opens in same tab
+        target: "_self",
       },
       node.attrs.label || node.attrs.id,
     ]
