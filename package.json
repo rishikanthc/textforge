@@ -1,7 +1,7 @@
 {
   "name": "textforge",
   "private": false,
-  "version": "1.3.2",
+  "version": "1.3.3",
   "type": "module",
   "description": "A beautiful, extensible rich text editor built with Tiptap and React",
   "main": "dist/index.umd.js",
