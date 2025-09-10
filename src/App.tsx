@@ -6,7 +6,7 @@ import './App.css'
 import { TYPOGRAPHY_PRESETS, getPresetById, type TypographyPresetId } from './typography'
 
 function App() {
-  const [content, setContent] = useState('<h1>Welcome to Quill Editor</h1><p>This is a demo of the extensible Tiptap-based editor library. Try editing this content!</p><h2>Typography & Formatting</h2><ul><li><strong>Bold text</strong> for emphasis</li><li><em>Italic text</em> for nuance</li><li><mark>Highlighting</mark> when needed</li><li>Experiment with the typography presets in the demo controls</li></ul><h3>Try These Features:</h3><ul><li><strong>Ctrl+B / Cmd+B</strong> for bold</li><li><strong>Ctrl+I / Cmd+I</strong> for italic</li><li><strong>Ctrl+Shift+H / Cmd+Shift+H</strong> for highlight</li><li>Type <code>==text==</code> for highlighting</li><li>Type <code>*text*</code> or <code>_text_</code> for italic</li><li>Type <code>@</code> to mention someone</li></ul>')
+  const [content, setContent] = useState('<h1>Typography Testing Ground</h1><p>This comprehensive demo showcases TextForge\'s extensive typography capabilities. We\'ve carefully curated over 25 font pairings from Google Fonts, all optimized for long-form reading and aesthetic appeal.</p><h2>The Art of Font Pairing</h2><p>Great typography is invisible—it guides the reader through your content without drawing attention to itself. Our collection focuses exclusively on sans-serif fonts that excel in digital environments, providing excellent readability across all screen sizes and resolutions.</p><h3>Key Features to Test</h3><ul><li><strong>Bold emphasis</strong> for important concepts</li><li><em>Italic styling</em> for subtle emphasis and quotes</li><li><mark>Highlighting</mark> for critical information</li><li>Different <strong>heading levels</strong> and their hierarchy</li><li>Long paragraphs to assess reading comfort</li></ul><blockquote><p>"Typography is the craft of endowing human language with a durable visual form." — Robert Bringhurst</p></blockquote><h4>Professional Applications</h4><p>Whether you\'re building a blog, documentation site, article platform, or any content-focused application, these font combinations have been selected for their versatility and professional appearance. Each pairing balances personality with practicality.</p><p>Try switching between different font presets using the dropdown above to see how dramatically typography can change the feel of your content. Notice how some combinations feel more technical, others more friendly, and some more editorial in nature.</p><h5>Technical Excellence</h5><p>All fonts support variable font technology where available, ensuring optimal loading performance and smooth scaling across different weights and styles. They also include comprehensive character sets for international content.</p>')
 
   // Mock mention data
   const mentionItems: MentionItem[] = [
@@ -100,15 +100,21 @@ function App() {
     }
   }
 
-  const [fontPreset, setFontPreset] = useState<TypographyPresetId>(() => (localStorage.getItem('quill-font-preset') as TypographyPresetId) || 'figtree-manrope')
+  const [fontPreset, setFontPreset] = useState<TypographyPresetId>(() => (localStorage.getItem('quill-font-preset') as TypographyPresetId) || 'inter-plusjakarta')
+  const [bodyWeight, setBodyWeight] = useState<number>(() => parseInt(localStorage.getItem('quill-body-weight') || '400'))
+  const [headingWeight, setHeadingWeight] = useState<number>(() => parseInt(localStorage.getItem('quill-heading-weight') || '600'))
 
   useEffect(() => {
     const preset = getPresetById(fontPreset) || TYPOGRAPHY_PRESETS[0]
     const root = document.documentElement
     root.style.setProperty('--font-body', preset.body)
     root.style.setProperty('--font-heading', preset.heading)
+    root.style.setProperty('--font-weight-body', bodyWeight.toString())
+    root.style.setProperty('--font-weight-heading', headingWeight.toString())
     localStorage.setItem('quill-font-preset', preset.id)
-  }, [fontPreset])
+    localStorage.setItem('quill-body-weight', bodyWeight.toString())
+    localStorage.setItem('quill-heading-weight', headingWeight.toString())
+  }, [fontPreset, bodyWeight, headingWeight])
 
   // Mock image upload handler - in a real app, this would upload to your server
   const handleImageUpload = async (file: File): Promise<string> => {
@@ -132,8 +138,8 @@ function App() {
   return (
     <div className="app">
       <header className="app-header">
-        <h1>Quill Editor Demo</h1>
-        <p>A beautiful, extensible editor built with Tiptap and React</p>
+        <h1>TextForge Typography Gallery</h1>
+        <p>Test 25+ carefully curated font pairings • All optimized for readability and aesthetics</p>
       </header>
       
       <div className="demo-controls">
@@ -144,18 +150,65 @@ function App() {
         <button onClick={handleInsertBlockMath}>Insert Block Math</button>
         <button onClick={handleInsertAlignTest}>Test Align</button>
         <button onClick={handleInsertCodeBlock}>Insert Code Block</button>
-        <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          Typography:
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', minWidth: '300px' }}>
+          <label style={{ fontSize: '0.9rem', fontWeight: 'bold', color: '#333' }}>
+            Typography Preset ({TYPOGRAPHY_PRESETS.length} self-hosted fonts):
+          </label>
           <select
             value={fontPreset}
-            onChange={(e) => setFontPreset(e.target.value)}
-            style={{ padding: '0.5rem', borderRadius: 6 }}
+            onChange={(e) => setFontPreset(e.target.value as TypographyPresetId)}
+            style={{ 
+              padding: '0.75rem', 
+              borderRadius: 8, 
+              border: '2px solid #e0e0e0',
+              fontSize: '0.9rem',
+              backgroundColor: 'white',
+              cursor: 'pointer',
+              fontFamily: 'inherit'
+            }}
           >
             {TYPOGRAPHY_PRESETS.map(p => (
               <option key={p.id} value={p.id}>{p.label}</option>
             ))}
           </select>
-        </label>
+          <p style={{ fontSize: '0.8rem', color: '#666', margin: 0 }}>
+            Current: <strong>{getPresetById(fontPreset)?.label}</strong>
+          </p>
+        </div>
+        
+        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+            <label style={{ fontSize: '0.8rem', fontWeight: 'bold', color: '#333' }}>
+              Body Weight: {bodyWeight}
+            </label>
+            <input
+              type="range"
+              min="100"
+              max="900"
+              step="100"
+              value={bodyWeight}
+              onChange={(e) => setBodyWeight(parseInt(e.target.value))}
+              style={{ width: '150px' }}
+            />
+            <span style={{ fontSize: '0.7rem', color: '#888' }}>100 (Thin) → 900 (Black)</span>
+          </div>
+          
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+            <label style={{ fontSize: '0.8rem', fontWeight: 'bold', color: '#333' }}>
+              Heading Weight: {headingWeight}
+            </label>
+            <input
+              type="range"
+              min="100"
+              max="900"
+              step="100"
+              value={headingWeight}
+              onChange={(e) => setHeadingWeight(parseInt(e.target.value))}
+              style={{ width: '150px' }}
+            />
+            <span style={{ fontSize: '0.7rem', color: '#888' }}>100 (Thin) → 900 (Black)</span>
+          </div>
+        </div>
       </div>
 
       <div className="auto-save-controls">
@@ -202,6 +255,9 @@ function App() {
           onAutoSave={autoSaveEnabled ? handleAutoSave : undefined}
           autoSaveDelay={autoSaveDelay}
           mentions={mentionItems}
+          typographyPreset={fontPreset}
+          bodyWeight={bodyWeight}
+          headingWeight={headingWeight}
         />
       </div>
 

@@ -41,6 +41,15 @@ export default defineConfig(({ mode }) => {
               'react-dom': 'ReactDOM',
               '@tiptap/core': 'TiptapCore',
               '@tiptap/react': 'TiptapReact'
+            },
+            assetFileNames: (assetInfo) => {
+              if (assetInfo.name && assetInfo.name.endsWith('.woff2')) {
+                return 'fonts/[name][extname]'
+              }
+              if (assetInfo.name && assetInfo.name.endsWith('.css')) {
+                return '[name][extname]'
+              }
+              return 'assets/[name]-[hash][extname]'
             }
           }
         }
