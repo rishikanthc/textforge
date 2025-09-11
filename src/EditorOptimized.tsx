@@ -8,7 +8,6 @@ import { Callout } from './extensions/Callout'
 import { MathInputRules } from './extensions/MathInputRules'
 import { MarkdownLink } from './extensions/MarkdownLink'
 import { LazyMathEditDialog } from './components/LazyMathEditDialog'
-import { getPresetById, type TypographyPresetId } from './typography'
 import { type MentionItem } from './components/MentionList'
 import { getLowlight, preloadCommonLanguages } from './utils/lowlightFactory'
 import { loadMathExtension, createMathConfiguration } from './utils/mathUtils'
@@ -159,23 +158,6 @@ interface EditorProps {
   onAutoSave?: (content: string) => void | Promise<void> // Callback for auto-save functionality
   autoSaveDelay?: number // Debounce delay in milliseconds (default: 250ms)
   /**
-   * Optional typography preset id. When provided, the editor will set CSS variables
-   * `--font-body` and `--font-heading` on its root container, scoping fonts to this instance.
-   */
-  typographyPreset?: TypographyPresetId
-  /**
-   * Direct font overrides. If provided, takes precedence over `typographyPreset`.
-   */
-  fonts?: { body?: string; heading?: string }
-  /**
-   * Font weight for body text (100-900). Defaults to 400.
-   */
-  bodyWeight?: number
-  /**
-   * Font weight for headings (100-900). Defaults to 600.
-   */
-  headingWeight?: number
-  /**
    * Array of mention items for @mention suggestions
    */
   mentions?: MentionItem[]
@@ -199,10 +181,6 @@ const Editor = forwardRef<EditorRef, EditorProps>(({
   onImageUpload,
   onAutoSave,
   autoSaveDelay = 250,
-  typographyPreset,
-  fonts,
-  bodyWeight = 400,
-  headingWeight = 600,
   mentions = []
 }, ref) => {
   const [mathDialog, setMathDialog] = useState<{
@@ -396,7 +374,7 @@ const Editor = forwardRef<EditorRef, EditorProps>(({
       onChange?.(html)
       debouncedAutoSave(html)
     },
-    onCreate: ({ editor }) => {
+    onCreate: () => {
       // Editor is fully created and view is available
       setEditorReady(true)
     },
@@ -462,21 +440,9 @@ const Editor = forwardRef<EditorRef, EditorProps>(({
     return null
   }
 
-  // Memoize typography computation to prevent recalculation
-  const styleVars = useMemo(() => {
-    const preset = fonts ? undefined : getPresetById(typographyPreset)
-    const bodyFont = fonts?.body ?? preset?.body
-    const headingFont = fonts?.heading ?? preset?.heading
-    const vars: Record<string, string> = {}
-    if (bodyFont) vars['--font-body'] = bodyFont
-    if (headingFont) vars['--font-heading'] = headingFont
-    vars['--font-weight-body'] = bodyWeight.toString()
-    vars['--font-weight-heading'] = headingWeight.toString()
-    return vars
-  }, [fonts, typographyPreset, bodyWeight, headingWeight])
 
   return (
-    <div className={`quill-editor ${className}`} style={styleVars}>
+    <div className={`quill-editor ${className}`}>
       <EditorContent 
         editor={editor}
         className="quill-editor-content"

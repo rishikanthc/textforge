@@ -1,9 +1,11 @@
 /* Quill Editor Typography Styles */
 
-/* Font weight variables with defaults */
+/* System font variables */
 :root {
+  --font-body: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-heading: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   --font-weight-body: 400;
-  --font-weight-heading: 600;
+  --font-weight-heading: 500;
 }
 
 /* Loading Animation */
@@ -82,7 +84,8 @@
 
 .quill-editor {
   font-family: var(--font-body);
-  line-height: 1.7;
+  font-size: 16px;
+  line-height: 26px;
   color: #111827;
 }
 
@@ -95,15 +98,17 @@
   outline: none;
   border: none;
   font-family: var(--font-body);
-  font-size: 17px;
-  line-height: 1.7;
+  font-size: 16px;
+  line-height: 26px;
   color: #111827;
 }
 
 .quill-editor .ProseMirror p {
   margin: 0 0 1.1em 0;
   font-family: var(--font-body);
-  font-weight: var(--font-weight-body);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 26px;
 }
 
 .quill-editor .ProseMirror p:last-child {
@@ -126,7 +131,7 @@
 .quill-editor .ProseMirror h5,
 .quill-editor .ProseMirror h6 {
   font-family: var(--font-heading);
-  font-weight: var(--font-weight-heading);
+  font-weight: 500;
   line-height: 1.25;
   letter-spacing: -0.01em;
   margin: 1.6em 0 0.6em 0;
@@ -144,32 +149,32 @@
 
 .quill-editor .ProseMirror h1 {
   font-size: 2.25rem;
-  font-weight: var(--font-weight-heading);
+  font-weight: 500;
 }
 
 .quill-editor .ProseMirror h2 {
   font-size: 1.75rem;
-  font-weight: var(--font-weight-heading);
+  font-weight: 500;
 }
 
 .quill-editor .ProseMirror h3 {
   font-size: 1.5rem;
-  font-weight: var(--font-weight-heading);
+  font-weight: 500;
 }
 
 .quill-editor .ProseMirror h4 {
   font-size: 1.25rem;
-  font-weight: var(--font-weight-heading);
+  font-weight: 500;
 }
 
 .quill-editor .ProseMirror h5 {
   font-size: 1.125rem;
-  font-weight: var(--font-weight-heading);
+  font-weight: 500;
 }
 
 .quill-editor .ProseMirror h6 {
   font-size: 1rem;
-  font-weight: var(--font-weight-heading);
+  font-weight: 500;
 }
 
 /* Lists */
@@ -206,7 +211,7 @@
   color: #e83e8c;
   padding: 0.2em 0.4em;
   border-radius: 3px;
-  font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
   font-size: 0.875em;
 }
 
@@ -516,7 +521,7 @@ div.quill-editor div.quill-editor-content div.ProseMirror i {
   border: 1px solid #d1d5db;
   border-radius: 8px;
   font-size: 14px;
-  font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
   background: #fafafa;
   color: #1f2937;
   transition: all 0.15s ease;
@@ -597,7 +602,7 @@ div.quill-editor div.quill-editor-content div.ProseMirror i {
 .quill-editor .ProseMirror pre {
   background: #f8f9fa;
   color: #495057;
-  font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
   font-size: 0.875rem;
   line-height: 1.5;
   padding: 1rem;
