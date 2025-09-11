@@ -1,7 +1,7 @@
 {
   "name": "textforge",
   "private": false,
-  "version": "1.4.1",
+  "version": "1.4.5",
   "type": "module",
   "description": "A beautiful, extensible rich text editor built with Tiptap and React",
   "main": "dist/index.umd.js",
@@ -83,6 +83,7 @@
   "dependencies": {
     "@floating-ui/dom": "^1.7.4",
     "@tiptap/extension-mention": "^3.4.1",
-    "@tiptap/suggestion": "^3.4.1"
+    "@tiptap/suggestion": "^3.4.1",
+    "textforge": "^1.4.4"
   }
 }
