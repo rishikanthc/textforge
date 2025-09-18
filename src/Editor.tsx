@@ -146,6 +146,9 @@ const Editor = forwardRef<EditorRef, EditorProps>(({
   // Track editor ready state
   const [isEditorReady, setIsEditorReady] = useState(false)
 
+  // Create a ref to hold current mentions for dynamic updates
+  const mentionsRef = useRef<MentionItem[]>(mentions || [])
+
   // Initialize auto-save hook
   const debouncedAutoSave = useAutoSave(onAutoSave, autoSaveDelay)
 
@@ -192,16 +195,23 @@ const Editor = forwardRef<EditorRef, EditorProps>(({
           }
         },
         katexOptions: {
+          displayMode: true,
+          fleqn: false,
+          leqno: false,
+          output: 'htmlAndMathml',
           throwOnError: false,
           strict: false,
+          globalGroup: true,
+          trust: true,
           macros: {
             '\\R': '\\mathbb{R}',
             '\\N': '\\mathbb{N}',
             '\\Z': '\\mathbb{Z}',
             '\\Q': '\\mathbb{Q}',
-            '\\C': '\\mathbb{C}'
-          },
-          trust: (context) => ['\\htmlId', '\\href', '\\class', '\\style', '\\data'].includes(context.command)
+            '\\C': '\\mathbb{C}',
+            '\\vec': '\\overrightarrow{#1}',
+            '\\bm': '\\boldsymbol{#1}'
+          }
         }
       }),
       Image.configure({
@@ -310,12 +320,12 @@ const Editor = forwardRef<EditorRef, EditorProps>(({
       MathInputRules,
       MarkdownLink,
       Callout,
-      ...(mentions && mentions.length > 0 ? [CustomMention.configure({
+      CustomMention.configure({
         HTMLAttributes: {
           class: 'mention',
         },
-        suggestion: createMentionSuggestion(mentions),
-      })] : [])
+        suggestion: createMentionSuggestion(() => mentionsRef.current),
+      })
     ],
     content,
     editable,
@@ -337,6 +347,11 @@ const Editor = forwardRef<EditorRef, EditorProps>(({
       editor.commands.setContent(content)
     }
   }, [content, editor])
+
+  // Update mentions ref when mentions prop changes
+  useEffect(() => {
+    mentionsRef.current = mentions || []
+  }, [mentions])
 
   useImperativeHandle(ref, () => ({
     getContent: () => editor?.getHTML() || '',

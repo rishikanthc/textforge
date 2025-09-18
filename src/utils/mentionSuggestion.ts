@@ -20,8 +20,9 @@ const updatePosition = (editor: any, element: HTMLElement) => {
   })
 }
 
-export const createMentionSuggestion = (mentionItems: MentionItem[]) => ({
+export const createMentionSuggestion = (getMentionItems: () => MentionItem[]) => ({
   items: ({ query }: { query: string }) => {
+    const mentionItems = getMentionItems()
     if (!mentionItems || !Array.isArray(mentionItems)) {
       return []
     }
