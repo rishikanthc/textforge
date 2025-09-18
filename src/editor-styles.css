@@ -19,9 +19,12 @@
 
 /* Loading Animation */
 @keyframes pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 1;
   }
+
   50% {
     opacity: .5;
   }
@@ -93,7 +96,7 @@
 
 .quill-editor {
   font-family: var(--font-body);
-  font-size: 16px;
+  font-size: 18px;
   line-height: var(--line-height-body);
   color: #1f2937;
 }
@@ -107,7 +110,7 @@
   outline: none;
   border: none;
   font-family: var(--font-body);
-  font-size: 16px;
+  font-size: 18px;
   line-height: var(--line-height-body);
   color: #1f2937;
 }
@@ -116,7 +119,7 @@
   margin: 0 0 1.2em 0;
   font-family: var(--font-body);
   font-weight: var(--font-weight-body);
-  font-size: 16px;
+  font-size: 18px;
   line-height: var(--line-height-body);
   text-align: left;
 }
@@ -404,12 +407,12 @@ div.quill-editor div.quill-editor-content div.ProseMirror i {
   padding-inline-end: 8px;
 }
 
-.callout[data-collapsible='true'] > .callout-title .callout-fold-icon svg {
+.callout[data-collapsible='true']>.callout-title .callout-fold-icon svg {
   transform: rotate(-90deg);
   transition: transform 100ms ease-in-out;
 }
 
-.callout[data-collapsible='true'][open] > .callout-title .callout-fold-icon svg {
+.callout[data-collapsible='true'][open]>.callout-title .callout-fold-icon svg {
   transform: none;
 }
 
@@ -427,7 +430,6 @@ div.quill-editor div.quill-editor-content div.ProseMirror i {
 
 /* Mathematics extension styles - Enhanced for new typography */
 .quill-editor .ProseMirror .tiptap-mathematics-render {
-  padding: 0.125rem 0.375rem;
   border-radius: 4px;
   font-family: 'KaTeX_Main', 'Computer Modern', 'DM Sans', var(--font-body);
 }
@@ -446,17 +448,87 @@ div.quill-editor div.quill-editor-content div.ProseMirror i {
 .quill-editor .ProseMirror .tiptap-mathematics-render[data-type='inline-math'] {
   display: inline-block;
   vertical-align: baseline;
-  margin: 0 0.125rem;
+  margin: 0 0.05rem;
+  padding: 0 0.25rem;
+  line-height: 1;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 }
 
 .quill-editor .ProseMirror .tiptap-mathematics-render[data-type='block-math'] {
   display: block;
-  margin: 1rem 0;
-  padding: 0.75rem;
+  margin: 0.825em 0 !important;
+  padding: 0 !important;
   text-align: center;
   background: transparent;
   border: none;
   border-radius: 8px;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  /* Smooth scrolling on mobile */
+  -webkit-overflow-scrolling: touch;
+  /* Show scrollbar hints */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
+/* WebKit scrollbar styling for block math */
+.quill-editor .ProseMirror .tiptap-mathematics-render[data-type='block-math']::-webkit-scrollbar {
+  height: 4px;
+}
+
+.quill-editor .ProseMirror .tiptap-mathematics-render[data-type='block-math']::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.quill-editor .ProseMirror .tiptap-mathematics-render[data-type='block-math']::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
+}
+
+.quill-editor .ProseMirror .tiptap-mathematics-render[data-type='block-math']::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+/* Override any KaTeX default margins for display math */
+.quill-editor .ProseMirror .tiptap-mathematics-render[data-type='block-math'] .katex-display {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.quill-editor .ProseMirror .tiptap-mathematics-render[data-type='block-math'] .katex {
+  margin: 0 !important;
+  padding: 0 !important;
+  /* Ensure equations don't break out of container */
+  min-width: 0;
+  white-space: nowrap;
+}
+
+/* Mobile-responsive equation scaling */
+@media (max-width: 768px) {
+  .quill-editor .ProseMirror .tiptap-mathematics-render[data-type='block-math'] {
+    /* Add subtle padding for better mobile UX */
+    padding: 0 8px !important;
+  }
+
+  .quill-editor .ProseMirror .tiptap-mathematics-render[data-type='block-math'] .katex {
+    /* Scale down equations on small screens if needed */
+    font-size: 0.9em;
+  }
+
+  /* Make scrollbar more visible on mobile */
+  .quill-editor .ProseMirror .tiptap-mathematics-render[data-type='block-math']::-webkit-scrollbar {
+    height: 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .quill-editor .ProseMirror .tiptap-mathematics-render[data-type='block-math'] .katex {
+    /* Further scale down on very small screens */
+    font-size: 0.8em;
+  }
 }
 
 .quill-editor .ProseMirror .tiptap-mathematics-render.inline-math-error,
@@ -499,6 +571,7 @@ div.quill-editor div.quill-editor-content div.ProseMirror i {
     opacity: 0;
     transform: translateY(-20px) scale(0.95);
   }
+
   to {
     opacity: 1;
     transform: translateY(0) scale(1);

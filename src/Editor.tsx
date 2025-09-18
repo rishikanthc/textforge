@@ -40,7 +40,7 @@ lowlight.register('sh', bash)
 lowlight.register('sql', sql)
 lowlight.register('markdown', markdown)
 lowlight.register('md', markdown)
-import { Mathematics } from '@tiptap/extension-mathematics'
+import { BlockMath, InlineMath } from '@tiptap/extension-mathematics'
 import { Callout } from './extensions/Callout'
 import { MathInputRules } from './extensions/MathInputRules'
 import { MarkdownLink } from './extensions/MarkdownLink'
@@ -173,26 +173,41 @@ const Editor = forwardRef<EditorRef, EditorProps>(({
       Highlight.configure({
         multicolor: true
       }),
-      Mathematics.configure({
-        inlineOptions: {
-          onClick: (node, pos) => {
-            setMathDialog({
-              isOpen: true,
-              latex: node.attrs.latex || '',
-              isBlockMath: false,
-              position: pos,
-            })
-          }
+      InlineMath.configure({
+        onClick: (node, pos) => {
+          setMathDialog({
+            isOpen: true,
+            latex: node.attrs.latex || '',
+            isBlockMath: false,
+            position: pos,
+          })
         },
-        blockOptions: {
-          onClick: (node, pos) => {
-            setMathDialog({
-              isOpen: true,
-              latex: node.attrs.latex || '',
-              isBlockMath: true,
-              position: pos,
-            })
+        katexOptions: {
+          displayMode: false,
+          output: 'htmlAndMathml',
+          throwOnError: false,
+          strict: false,
+          globalGroup: true,
+          trust: true,
+          macros: {
+            '\\R': '\\mathbb{R}',
+            '\\N': '\\mathbb{N}',
+            '\\Z': '\\mathbb{Z}',
+            '\\Q': '\\mathbb{Q}',
+            '\\C': '\\mathbb{C}',
+            '\\vec': '\\overrightarrow{#1}',
+            '\\bm': '\\boldsymbol{#1}'
           }
+        }
+      }),
+      BlockMath.configure({
+        onClick: (node, pos) => {
+          setMathDialog({
+            isOpen: true,
+            latex: node.attrs.latex || '',
+            isBlockMath: true,
+            position: pos,
+          })
         },
         katexOptions: {
           displayMode: true,
